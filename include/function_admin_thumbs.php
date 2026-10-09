@@ -135,7 +135,7 @@ function get_video_duration($video_path, $video_id)
     log_conversion($config['LOG_DIR']. '/' .$video_id. '.log', $cmd);
     exec($cmd, $output);
     log_conversion($config['LOG_DIR']. '/' .$video_id. '.log', implode("\n", $output));
-    while ( list($k,$v) = each($output) ) {
+    foreach ( $output as $k => $v ) {
         if ( $length = strstr($v, 'ID_LENGTH=') ) {
             break;
         }

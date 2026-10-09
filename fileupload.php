@@ -17,7 +17,7 @@ $allowed_ext = explode(',', $config['video_allowed_extensions']);
 $site_url = $config['BASE_URL'];
 $site_url= parse_url($site_url, PHP_URL_HOST);
 
-$referal_url=parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+$referal_url = ( isset($_SERVER['HTTP_REFERER']) ) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : NULL;
 if ($site_url != $referal_url){
 die('Invalid Upload!');
 }
@@ -114,12 +114,14 @@ if (!$chunks || $chunk == $chunks - 1) {
 	rename("{$filePath}.part", $filePath);
 	if(isset($_REQUEST['id'])) {
 		$extension = pathinfo($filePath, PATHINFO_EXTENSION);
-		$dest = $targetDir.'/'.$_REQUEST['id'].'.'.$extension;
-		if(rename($filePath,$dest)){
-            unlink($filePath);
-		}	
-		
-	}	
+		$file_id   = preg_replace('/[^A-Za-z0-9_\-]/', '', (string) $_REQUEST['id']);
+		if ($file_id !== '') {
+			$dest = $targetDir.'/'.$file_id.'.'.$extension;
+			if(rename($filePath,$dest)){
+            	unlink($filePath);
+			}
+		}
+	}
 }
 die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
 

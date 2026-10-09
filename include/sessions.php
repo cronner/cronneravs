@@ -3,9 +3,25 @@ defined('_VALID') or die('Restricted Access!');
 
 ini_set('session.name', 'AVS');
 ini_set('session.use_cookies', 1);
-ini_set('session.use_only_cookies', 0);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
 ini_set('session.gc_maxlifetime', intval($config['session_lifetime']));
-//session_set_cookie_params( 0, '/', '.yourdomain.com');
+
+// Harden the session cookie (HttpOnly + Secure + SameSite) and prevent
+// session fixation via strict mode.
+$secure_cookie = ( !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' )
+              || ( isset($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT']) === 443 );
+if ( PHP_VERSION_ID >= 70300 ) {
+    session_set_cookie_params(array(
+        'lifetime' => 0,
+        'path'     => '/',
+        'httponly' => true,
+        'secure'   => $secure_cookie,
+        'samesite' => 'Lax',
+    ));
+} else {
+    session_set_cookie_params(0, '/', '', $secure_cookie, true);
+}
 if ( $config['session_driver'] == 'database' ) {
     require $config['BASE_DIR']. '/classes/session.class.php';
 	if (version_compare(PHP_VERSION, '7.2.0') >= 0) {	

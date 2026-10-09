@@ -39,7 +39,7 @@ function getVideoDuration( $vid )
     $flv = $config['FLVDO_DIR']. '/' .$vid. '.flv';
     if ( file_exists($flv) ) {
         exec($config['mplayer']. ' -vo null -ao null -frames 0 -identify "' .$flv. '"', $p);
-        while ( list($k,$v) = each($p) ) {
+        foreach ( $p as $k => $v ) {
             if ( $length = strstr($v, 'ID_LENGTH=') ) {
                 break;
             }
@@ -308,15 +308,15 @@ function userExistsByID( $id )
 function makeTimeStamp($year='', $month='', $day='')
 {
     if(empty($year)) {
-        $year = strftime('%Y');
+        $year = date('Y');
     }
     
     if(empty($month)) {
-        $month = strftime('%m');
+        $month = date('m');
     }
     
     if(empty($day)) {
-        $day = strftime('%d');
+        $day = date('d');
     }
                                        
     return mktime(0, 0, 0, $month, $day, $year);

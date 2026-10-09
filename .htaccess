@@ -41,3 +41,15 @@ Options +FollowSymLinks
 #ErrorDocument 401 /error.php
 #ErrorDocument 403 /error.php
 #ErrorDocument 404 /error.php
+
+# Block direct web access to database dumps, conversion logs and other
+# sensitive files (covers sql/avs.sql, _install/avs.sql, tmp/logs/*, ...).
+<FilesMatch "\.(sql|log|lock|sh|bak|swp|save)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

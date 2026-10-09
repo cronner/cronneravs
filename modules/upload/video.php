@@ -44,7 +44,11 @@ if ( isset($_POST['video_upload_started']) ) {
 
 	
 
-		$extension = pathinfo($fileName, PATHINFO_EXTENSION);
+		$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+		$allowed_extensions = array_map('trim', explode(',', $config['video_allowed_extensions']));
+		if ( !in_array($extension, $allowed_extensions, true) ) {
+			$error = true;
+		}
 		$filepath = $config['VDO_DIR'].'/'.$unique_id.'.'.$extension;
 
 		if(!file_exists($filepath)) {
@@ -97,12 +101,11 @@ if ( isset($_POST['video_upload_started']) ) {
 			}
 
 			// Proc
-            $cmd = $config['phppath']
-		    	." ".$config['BASE_DIR']."/scripts/convert_videos.php"
-		    	." ".$vdoname
-		    	." ".$video_id
-		    	." ".$vdo_path
-		    ."";
+            $cmd = escapeshellarg($config['phppath'])
+		    	." ".escapeshellarg($config['BASE_DIR']."/scripts/convert_videos.php")
+		    	." ".escapeshellarg($vdoname)
+		    	." ".escapeshellarg($video_id)
+		    	." ".escapeshellarg($vdo_path);
             log_conversion($config['LOG_DIR']. '/' .$video_id. '.log', $cmd);
             $lg = $config['LOG_DIR']. '/' .$video_id. '.log2';
 			if($config['conversion_q'] == '1') {

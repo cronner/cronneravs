@@ -1,19 +1,11 @@
 <?php
 defined('_VALID') or die('Restricted Access!');
 
-if ( get_magic_quotes_gpc() ) {
-    $in = array(&$_GET, &$_POST, &$_COOKIE);
-    while ( list($k,$v) = each($in) ) {
-        foreach ($v as $key => $val) {
-            if (!is_array($val)) {
-                $in[$k][$key] = stripslashes($val);
-                continue;
-            }
-            $in[] =& $in[$k][$key];
-        }
-    }
-    unset($in);
-}
+/*
+ * Magic quotes were removed back in PHP 5.4, so the old
+ * get_magic_quotes_gpc() / each() block was dead code - and on PHP 8 it is a
+ * fatal error (both functions were removed). Removed for PHP 8 compatibility.
+ */
 
 function disableRegisterGlobals()
 {
