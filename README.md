@@ -1,6 +1,13 @@
 ## Overview
 
-This is the source of AVSCMS 8.2
+This is a fork of the AVSCMS 8.2 source.
+
+### Added in this fork
+
+<li>RSS 2.0 feed of the latest published videos (<code>rss.php</code>)</li>
+<li>Apache and Nginx installation instructions (<code>_install/Apache_installation.html</code>, <code>_install/Nginx_installation.html</code>)</li>
+<li>Install helper files: <code>_install/.htaccess</code> and the database schema <code>_install/avs.sql</code></li>
+
 
 AVSCMS's Official [website](https://www.avscms.com).
 
